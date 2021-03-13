@@ -8,17 +8,28 @@
 __setjmp:
 _setjmp:
 setjmp:
+#if defined(__thumb2__)  ||  !defined(__thumb__)
 	mov ip,r0
 	stmia ip!,{v1,v2,v3,v4,v5,v6,sl,fp}
 	mov r2,sp
 	stmia ip!,{r2,lr}
-	mov r0,#0
-
+#else
+	stmia r0!,{r4-r7}
+	mov r1,r8
+	mov r2,r9
+	mov r3,r10
+	mov r4,r11
+	mov r5,sp
+	mov r6,lr
+	stmia r0!,{r1-r6}
+	mov ip,r0
+#endif
+	movs r0,#0
 	adr r1,1f
 	ldr r2,1f
 	ldr r1,[r1,r2]
 
-#if __ARM_ARCH < 8
+#if __ARM_ARCH_PROFILE != 'M' && __ARM_ARCH < 8
 	tst r1,#0x260
 	beq 3f
 	// HWCAP_ARM_FPA
@@ -26,14 +37,15 @@ setjmp:
 	beq 2f
 	stc p2, cr4, [ip], #48
 #endif
-2:	tst r1,#0x40
+2:	movs r2,#0x40
+	tst r1,r2
 	beq 2f
 	.fpu vfp
 	vstmia ip!, {d8-d15}
 	.fpu softvfp
 	.eabi_attribute 10, 0
 	.eabi_attribute 27, 0
-#if __ARM_ARCH < 8
+#if __ARM_ARCH_PROFILE != 'M' && __ARM_ARCH < 8
 	// HWCAP_ARM_IWMMXT
 2:	tst r1,#0x200
 	beq 3f

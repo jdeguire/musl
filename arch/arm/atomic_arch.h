@@ -27,16 +27,6 @@ static inline int a_sc(volatile int *p, int v)
 	return !r;
 }
 
-#if __ARM_ARCH_7A__ || __ARM_ARCH_7R__ ||  __ARM_ARCH >= 7
-
-#define a_barrier a_barrier
-static inline void a_barrier()
-{
-	__asm__ __volatile__ ("dmb ish" : : : "memory");
-}
-
-#endif
-
 #define a_pre_llsc a_barrier
 #define a_post_llsc a_barrier
 
@@ -62,13 +52,22 @@ static inline int a_cas(volatile int *p, int t, int s)
 
 #endif
 
-#ifndef a_barrier
 #define a_barrier a_barrier
+#if __ARM_ARCH_7A__ || __ARM_ARCH_7R__ || __ARM_ARCH >= 7 || __ARM_ARCH_PROFILE == 'M'
+
+static inline void a_barrier()
+{
+	__asm__ __volatile__ ("dmb ish" : : : "memory");
+}
+
+#else
+
 static inline void a_barrier()
 {
 	register uintptr_t ip __asm__("ip") = __a_barrier_ptr;
 	__asm__ __volatile__( BLX " ip" : "+r"(ip) : : "memory", "cc", "lr" );
 }
+
 #endif
 
 #define a_crash a_crash

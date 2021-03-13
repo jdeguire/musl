@@ -43,6 +43,8 @@
  * building as thumb 2 and big-endian.
  */
 
+#if defined(__thumb2__)  ||  !defined(__thumb__)
+
 .syntax unified
 
 .global memcpy
@@ -477,3 +479,4 @@ copy_last_3_and_return:
 	ldmfd   sp!, {r0, r4, lr}
 	bx      lr
 
+#endif /* defined(__thumb2__)  ||  !defined(__thumb__) */
