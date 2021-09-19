@@ -76,7 +76,7 @@
 #define __NR_splice 76
 #define __NR_tee 77
 #define __NR_readlinkat 78
-#define __NR_fstatat 79
+#define __NR_newfstatat 79
 #define __NR_fstat 80
 #define __NR_sync 81
 #define __NR_fsync 82
@@ -293,6 +293,7 @@
 #define __NR_openat2		437
 #define __NR_pidfd_getfd	438
 #define __NR_faccessat2		439
+#define __NR_process_madvise	440
 
 #define __NR_sysriscv __NR_arch_specific_syscall
 #define __NR_riscv_flush_icache (__NR_sysriscv + 15)
