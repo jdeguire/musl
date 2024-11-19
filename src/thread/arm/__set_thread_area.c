@@ -43,7 +43,7 @@ int __set_thread_area(void *p)
 		__a_gettp_ptr = __a_gettp_cp15_m;
 	} else {
 		size_t *aux;
-		__a_gettp_ptr = __a_gettp_syscall;
+		__a_gettp_ptr = (uintptr_t)__a_gettp_syscall;
 		for (aux=libc.auxv; *aux; aux+=2) {
 			if (*aux != AT_PLATFORM) continue;
 			const char *s = (void *)aux[1];
