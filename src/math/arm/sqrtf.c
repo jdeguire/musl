@@ -1,6 +1,6 @@
 #include <math.h>
 
-#if (__ARM_PCS_VFP || (__VFP_FP__ && !__SOFTFP__)) && !BROKEN_VFP_ASM
+#if (__ARM_PCS_VFP || (__VFP_FP__ && !__SOFTFP__)) && !BROKEN_VFP_ASM && (__ARM_FP&4)
 
 float sqrtf(float x)
 {
